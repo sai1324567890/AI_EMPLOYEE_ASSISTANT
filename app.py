@@ -1,13 +1,3 @@
-"""
-Streamlit chatbot UI for the AI Training Assistant.
-
-Run with:
-    streamlit run app.py
-
-See also `pages/1_Admin_Dashboard.py` for the analytics dashboard
-(frequently asked questions, user activity, query category stats,
-and feedback results).
-"""
 import csv
 import uuid
 

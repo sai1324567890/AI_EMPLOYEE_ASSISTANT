@@ -1,18 +1,3 @@
-"""
-Voice support for the chat UI.
-
-- Voice INPUT: microphone -> text, via `streamlit-mic-recorder`. Records
-  audio in the browser, then transcribes it with the free Google Web Speech
-  endpoint (no API key needed). Network access happens in the *user's*
-  browser/machine when the app runs, not at build time.
-
-- Voice OUTPUT: text -> speech, via the browser's built-in `speechSynthesis`
-  API, rendered as a small HTML/JS widget with `st.components.v1.html`.
-  Fully client-side, free, no API key, no extra package.
-
-Both are additive: if `streamlit-mic-recorder` isn't installed, voice input
-is simply hidden with a one-line note instead of crashing the app.
-"""
 import json
 import re
 

@@ -1,12 +1,3 @@
-"""
-Thin client for Serper.dev (a Google Search API wrapper).
-
-Used as a fallback source when a question doesn't match anything in the
-local onboarding knowledge base. This module never raises on network/API
-failures — it always returns a `WebSearchResponse`, with `.ok=False` and a
-human-readable `.error` if something went wrong, so it can never take down
-the chat flow the way a bad LLM call could.
-"""
 import json
 from dataclasses import dataclass, field
 from typing import List

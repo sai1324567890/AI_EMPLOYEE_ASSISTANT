@@ -7,6 +7,9 @@ from .document_loader import load_corpus, Chunk
 from .retriever import Retriever, RetrievedChunk
 from .router import classify, classify_llm, RoutingDecision
 from .llm_client import LLMClient
+from .lc_chain import RouteRetriever, docs_to_retrieved
+from langsmith import traceable
+from langsmith.run_helpers import get_current_run_tree
 from .memory import SessionMemoryStore
 from .web_search import WebSearchClient
 from .prompts import (
@@ -123,9 +126,20 @@ class TrainingAssistant:
     def reset_conversation(self, session_id: str = "default") -> None:
         self.memory.reset(session_id)
 
+    @traceable(
+        name="TrainingAssistant.ask", run_type="chain",
+        process_inputs=lambda i: {"question": i.get("question"), "session_id": i.get("session_id")},
+        process_outputs=lambda r: {"route": r.route, "backend": r.backend, "answer": r.answer,
+                                   "citations": r.citations},
+    )
     def ask(self, question: str, top_k: int = None, session_id: str = "default",
             use_memory: bool = True) -> AssistantResult:
         top_k = top_k or config.TOP_K
+        _run = get_current_run_tree()
+        if _run:
+            _run.metadata.update({"session_id": session_id,
+                                  "retrieval_backend": self.retrieval_backend,
+                                  "router_backend": self.router_backend})
         memory = self.memory.get(session_id)
         history_block = memory.as_prompt_block() if (use_memory and not memory.is_empty()) else ""
 
@@ -170,7 +184,11 @@ class TrainingAssistant:
             self._finalize(result, memory, session_id)
             return result
 
-        retrieved = self.retriever.top_k(retrieval_query, decision.route, k=retrieval_top_k)
+        lc_retriever = RouteRetriever(retriever=self.retriever, route=decision.route, k=retrieval_top_k)
+        retrieved = docs_to_retrieved(lc_retriever.invoke(
+            retrieval_query,
+            config={"run_name": "retrieve_chunks", "metadata": {"route": decision.route, "k": retrieval_top_k}},
+        ))
 
         if not retrieved:
             reason = decision.reason + " (no chunks retrieved -> checking web/direct_llm fallback)"
@@ -274,6 +292,10 @@ class TrainingAssistant:
         )
 
     def _finalize(self, result: AssistantResult, memory, session_id: str) -> None:
+        _run = get_current_run_tree()
+        if _run:  # makes traces filterable by route/backend in LangSmith
+            _run.add_tags([f"route:{result.route}", f"backend:{result.backend}"])
+            _run.metadata.update({"routing_confidence": result.routing_confidence})
         memory.add(result.question, result.answer, result.route)
         if self.log_analytics:
             try:

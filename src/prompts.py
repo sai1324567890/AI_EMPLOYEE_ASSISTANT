@@ -1,8 +1,3 @@
-"""
-Prompt templates. Kept separate from orchestration logic so the
-assistant's role, tone, and boundaries can be tuned without touching
-the pipeline code.
-"""
 from . import config
 
 SYSTEM_PROMPT_RAG = f"""You are {config.ASSISTANT_NAME}, an AI training assistant that helps new \

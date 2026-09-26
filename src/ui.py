@@ -1,9 +1,3 @@
-"""
-Shared branding/UI helpers for the Streamlit app and the admin dashboard.
-
-Keeping this in one place means both `app.py` and `pages/1_Admin_Dashboard.py`
-render an identical header, color theme, and status banners.
-"""
 import base64
 from pathlib import Path
 

@@ -74,22 +74,15 @@ class LLMClient:
 
     # ------------------------------------------------------------------
     def _generate_groq(self, system_prompt: str, user_prompt: str) -> str:
-        """Generate through Groq's OpenAI-compatible chat-completions API."""
-        from openai import OpenAI
+        """Generate through Groq using a LangChain LCEL chain."""
+        from .lc_chain import build_chain
 
-        client = OpenAI(
-            api_key=config.GROQ_API_KEY,
-            base_url="https://api.groq.com/openai/v1",
-        )
-        resp = client.chat.completions.create(
-            model=config.GROQ_MODEL,
-            max_tokens=600,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-        )
-        return (resp.choices[0].message.content or "").strip()
+        chain = build_chain(config.GROQ_MODEL, max_tokens=600)
+        return chain.invoke(
+            {"system_prompt": system_prompt, "user_prompt": user_prompt},
+            config={"run_name": "groq_generate", "tags": ["groq"],
+                    "metadata": {"model": config.GROQ_MODEL}},
+        ).strip()
 
     @property
     def groq_web_search_enabled(self) -> bool:
@@ -105,11 +98,12 @@ class LLMClient:
             raise RuntimeError("Groq browser search is not configured.")
 
         from openai import OpenAI
+        from langsmith.wrappers import wrap_openai  # traces this call in LangSmith (no-op if tracing is off)
 
-        client = OpenAI(
+        client = wrap_openai(OpenAI(
             api_key=config.GROQ_API_KEY,
             base_url="https://api.groq.com/openai/v1",
-        )
+        ))
         resp = client.chat.completions.create(
             model=config.GROQ_WEB_SEARCH_MODEL,
             max_tokens=900,

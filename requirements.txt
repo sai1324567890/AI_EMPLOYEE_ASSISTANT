@@ -4,26 +4,9 @@ pandas>=2.0
 numpy>=1.24
 python-dotenv>=1.0
 pytest>=7.4
-
-# Advanced vector-database retrieval backend (RETRIEVAL_BACKEND=faiss).
-# Dense embeddings are built with a TF-IDF+SVD (LSA) pipeline by default,
-# so this needs no model download and runs fully offline.
-faiss-cpu>=1.7
-
-# Required for the Groq backend: Groq exposes an OpenAI-compatible API, so
-# the official `openai` client library is used to talk to it (with
-# base_url pointed at Groq instead of OpenAI). Also used for LLM-based
-# query routing (ROUTER_BACKEND=llm).
 openai>=1.30
-
-# Voice input (microphone -> text). Uses the browser's mic + Google's free
-# speech-recognition endpoint under the hood - no API key required. Voice
-# OUTPUT (text -> speech) uses the browser's built-in speechSynthesis API
-# directly and needs no extra package at all.
+langchain-core>=0.3
+langchain-openai>=0.3
+langsmith>=0.2
 streamlit-mic-recorder>=0.0.8
-
-# Optional: enables true semantic sentence embeddings for the FAISS
-# retriever instead of the default TF-IDF+SVD embeddings, IF you also
-# point SENTENCE_TRANSFORMERS_LOCAL_PATH at a locally-cached model.
-# Not required — the project works fully without it.
-# sentence-transformers>=2.7
+faiss-cpu>=1.7

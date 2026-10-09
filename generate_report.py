@@ -1,13 +1,3 @@
-"""
-Generates the full Evaluation & Testing Report required by the capstone
-spec: Accuracy Metrics, Response Quality Analysis, Test Cases, and User
-Feedback Results. Writes reports/EVALUATION_REPORT.md (and reuses
-evaluate.py's run to also refresh reports/eval_results.csv).
-
-Usage:
-    python generate_report.py
-    python generate_report.py --retrieval faiss --router llm
-"""
 import argparse
 from datetime import datetime, timezone
 from statistics import mean, pstdev

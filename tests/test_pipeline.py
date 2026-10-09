@@ -1,9 +1,3 @@
-"""
-Basic sanity tests for the routing + retrieval pipeline.
-Run with:  pytest -q
-These tests force LLM_BACKEND=extractive so they never require network
-access or API keys, and remain deterministic.
-"""
 import os
 os.environ["LLM_BACKEND"] = "extractive"
 

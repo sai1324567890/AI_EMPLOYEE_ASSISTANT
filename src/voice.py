@@ -15,27 +15,7 @@ except ImportError:
 # Voice input
 # ---------------------------------------------------------------------------
 def render_mic_input(key: str = "voice_input", language: str = "en"):
-    """
-    Renders a record/stop mic button. Returns a NEW transcript string the
-    first time speech is recognized, otherwise None (so callers can safely
-    do `if transcript: ...` without re-submitting the same recording on
-    every rerun).
-
-    Note: intentionally uses just_once=False and does its own "is this a
-    new transcript" tracking in session_state, rather than the library's
-    built-in just_once=True — that path re-returns a stale cached value
-    (and can error) once a rerun happens without a fresh recording, e.g.
-    right after we trigger st.rerun() to submit the transcribed question.
-
-    Voice input relies on the browser's native SpeechRecognition API, which
-    only Chromium-based browsers (Chrome, Edge, Chrome for Android)
-    implement — it does NOT work in Safari or Firefox at all, and needs an
-    HTTPS or localhost origin plus microphone permission to be granted.
-    That's the most common cause of "voice doesn't work" — wrong browser,
-    not a code issue. The component call is also wrapped in a try/except,
-    since a third-party JS component erroring should surface a clear
-    message rather than silently doing nothing or breaking the page.
-    """
+ 
     if not MIC_AVAILABLE:
         st.caption(
             "🎙️ Voice input needs one more package: run "

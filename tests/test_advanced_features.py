@@ -1,9 +1,3 @@
-"""
-Tests for the advanced features: FAISS vector retrieval, LLM-based query
-classification (with offline fallback), conversation memory, and the
-analytics store. Forces LLM_BACKEND=extractive so these remain
-deterministic and network-free, same as test_pipeline.py.
-"""
 import os
 
 os.environ["LLM_BACKEND"] = "extractive"

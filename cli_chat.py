@@ -1,15 +1,3 @@
-"""
-Minimal terminal chat loop — useful for quick testing without Streamlit.
-Maintains conversation memory across turns (ask a follow-up question and
-the assistant will remember what you just talked about).
-
-Usage:
-    python cli_chat.py
-    python cli_chat.py --retrieval faiss
-    python cli_chat.py --router llm
-
-Type 'new' to start a fresh conversation (clears memory), 'exit'/'quit' to leave.
-"""
 import argparse
 import uuid
 

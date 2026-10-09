@@ -1,11 +1,3 @@
-"""
-LangChain building blocks for the AI Training Assistant.
-
-- get_chat_model():  Groq via LangChain's OpenAI-compatible ChatOpenAI
-- build_chain():     LCEL chain  ChatPromptTemplate | chat model | StrOutputParser
-- RouteRetriever:    LangChain BaseRetriever wrapping the existing TF-IDF / FAISS retrievers
-- docs_to_retrieved: LangChain Documents -> RetrievedChunk (keeps the rest of the pipeline unchanged)
-"""
 from typing import Any, List
 
 from langchain_core.callbacks import CallbackManagerForRetrieverRun
